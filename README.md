@@ -1,4 +1,4 @@
-Superconducting Subits in Python (scqubits)
+Superconducting Qubits in Python (scqubits)
 ===========================================
 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/scqubits/badges/downloads.svg)](https://anaconda.org/conda-forge/scqubits)
