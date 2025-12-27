@@ -1,4 +1,4 @@
-scqubits: superconducting qubits in Python
+Superconducting Subits in Python (scqubits)
 ===========================================
 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/scqubits/badges/downloads.svg)](https://anaconda.org/conda-forge/scqubits)
@@ -69,6 +69,8 @@ There are two related packages on github:
 
 documentation source code: https://github.com/scqubits/scqubits-doc   
 example notebooks: https://github.com/scqubits/scqubits-examples  
+
+Additional example script in this fork: `examples/anharmonicity_vs_ratio.py` (transmon anharmonicity vs EJ/EC sweep).
 
 
 Contribute
