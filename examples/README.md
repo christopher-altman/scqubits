@@ -23,6 +23,7 @@ Increasing $E_J/E_C$ suppresses charge dispersion (excellent for dephasing), but
 ### The transmon Hamiltonian
 
 A (single-junction) transmon is described by the Cooper-pair box Hamiltonian
+
 $$
 H = 4E_C(\hat n-n_g)^2 - E_J\cos\hat\varphi.
 $$
