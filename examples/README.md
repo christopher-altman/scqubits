@@ -152,22 +152,17 @@ python examples/anharmonicity_vs_ratio.py --debug
 
 ## Suggested next steps / expansions (high value, low scope)
 
-1) **Analytic vs numeric overlay**
-The current script already overlays the asymptotic limit $\alpha_{\text{approx}}=-E_C$. You can extend this by also plotting $\omega_{01}$ with
+1) **Analytic vs numeric overlay** — The current script already overlays the asymptotic limit $\alpha_{\text{approx}}=-E_C$. You can extend this by also plotting $\omega_{01}$ with
 $\omega_{01}^{\text{approx}}=\sqrt{8E_JE_C}-E_C$.
 
-2) **Dimensionless "oracle view"**
-Plot $\alpha/E_C$ vs $E_J/E_C$. In the deep transmon limit this should approach **$-1$** cleanly.
+2) **Dimensionless "oracle view"** — Plot $\alpha/E_C$ vs $E_J/E_C$. In the deep transmon limit this should approach **$-1$** cleanly.
 
-3) **Charge dispersion map**
-For a few fixed ratios, sweep $n_g\in[0,0.5]$ and plot the spread in $\omega_{01}(n_g)$. This visualizes *why* transmons
+3) **Charge dispersion map** — For a few fixed ratios, sweep $n_g\in[0,0.5]$ and plot the spread in $\omega_{01}(n_g)$. This visualizes *why* transmons
 prefer large $E_J/E_C$.
 
-4) **Convergence harness**
-Repeat the sweep across `ncut` values, report max deviation, and optionally save CSV/JSON artifacts for reproducibility.
+4) **Convergence harness** — Repeat the sweep across `ncut` values, report max deviation, and optionally save CSV/JSON artifacts for reproducibility.
 
-5) **Engineering dial**
-Plot $|\alpha|/\omega_{01}$ vs $E_J/E_C$ as a compact "leakage pressure" proxy.
+5) **Engineering dial** — Plot $|\alpha|/\omega_{01}$ vs $E_J/E_C$ as a compact "leakage pressure" proxy.
 
 ---
 
@@ -175,7 +170,8 @@ Plot $|\alpha|/\omega_{01}$ vs $E_J/E_C$ as a compact "leakage pressure" proxy.
 
 - Peter Groszkowski and Jens Koch, *scqubits: a Python package for superconducting qubits*, **Quantum** 5, 583 (2021). DOI: 10.22331/q-2021-11-17-583.
   https://quantum-journal.org/papers/q-2021-11-17-583/
-- Sai Pavan Chitta, Tianpu Zhao, Ziwen Huang, Ian Mondragon-Shem, and Jens Koch, *Computer-aided quantization and numerical analysis of superconducting circuits*, **New J. Phys.** 24, 103020 (2022). DOI: 10.1088/1367-2630/ac94f2.
+- Sai Pavan Chitta, Tianpu Zhao, Ziwen Huang, Ian Mondragon-Shem, and Jens Koch, *Computer-aided quantization and numerical analysis of superconducting circuits*, **New J. Phys.** 24, 103020 (2022). DOI: 10.1088/1367-2630/ac94f2.  
+  https://doi.org/10.1088/1367-2630/ac94f2
 
 ---
 
