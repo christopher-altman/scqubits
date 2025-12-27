@@ -97,8 +97,9 @@ In scqubits, energies are expressed in user-selected **frequency units** (defaul
 Here we set $E_C=1$ to emphasize scaling.
 
 To make the plot "device-realistic," try:
-- $E_C \sim 0.2$–$0.4$ GHz
-- $E_J/E_C \sim 20$–$100$
+
+- $E_C \sim 0.2\text{–}0.4\ \mathrm{GHz}$
+- $E_J/E_C \sim 20\text{–}100$
 
 Then interpret the output $\alpha$ as GHz.
 
