@@ -81,7 +81,7 @@ This example sweeps the *ratio* $E_J/E_C$ at fixed $E_C$, so you can watch that 
 - Calls `tmon.anharmonicity()` to compute $\alpha$
 - Plots $\alpha$ vs $E_J/E_C$ on a log $x$-axis
 
-**Why the log axis matters:** device-relevant ratios span *decades* (roughly 20–100 in many designs). A log scale makes the “rapid early change → slow asymptote” structure readable.
+**Why the log axis matters:** device-relevant ratios span a wide range (e.g., ~20–100 in many designs). A log scale makes the “rapid early change → slow asymptote” structure readable.
 
 **Key point:** The curve should be **negative** (transmon levels get closer together with increasing excitation number). As $E_J/E_C$ becomes large, it should **approach** $\alpha\approx -E_C$, and the **relative** anharmonicity $|\alpha|/\omega_{01}$ shrinks as you crank up $E_J/E_C$.
 
