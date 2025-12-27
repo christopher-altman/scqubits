@@ -28,6 +28,8 @@ generated plot will appear in a new window.  Users can modify the
 ``EC`` value, the sweep range of ``EJ/EC``, and the number of points to
 adjust resolution and computational cost.
 
+Add ``--debug`` flag to print diagnostic information at the highest ratio.
+
 References
 ----------
 
@@ -43,6 +45,7 @@ https://iopscience.iop.org/article/10.1088/1367-2630/ac94f2
 
 """
 
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -60,6 +63,16 @@ def main() -> None:
     At the end, it plots the results.
 
     """
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description="Compute transmon anharmonicity vs EJ/EC ratio"
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Print diagnostic information at the highest ratio",
+    )
+    args = parser.parse_args()
 
     # Set a fixed charging energy (in the same units as EJ).  For
     # superconducting circuits EJ is typically expressed in gigahertz units
@@ -75,7 +88,7 @@ def main() -> None:
     ratio_max = 100.0  # strongly transmon (small anharmonicity)
     num_points = 50
 
-    ratios = np.linspace(ratio_min, ratio_max, num_points)
+    ratios = np.logspace(np.log10(ratio_min), np.log10(ratio_max), num_points)
     anharmonicities = []
 
     # We fix ng = 0 to avoid charge dispersion effects and choose a
@@ -100,19 +113,39 @@ def main() -> None:
     ratios = np.array(ratios)
     anharmonicities = np.array(anharmonicities)
 
+    # Debug output if requested
+    if args.debug:
+        idx_max = len(ratios) - 1
+        alpha_max = anharmonicities[idx_max]
+        ratio_max_actual = ratios[idx_max]
+        EJ_max = ratio_max_actual * EC
+        print(f"\n=== Debug info at EJ/EC = {ratio_max_actual:.2f} ===")
+        print(f"EC = {EC:.4f}")
+        print(f"EJ = {EJ_max:.4f}")
+        print(f"α = {alpha_max:.4f}")
+        print(f"α/EC = {alpha_max/EC:.4f} (should approach -1 in deep transmon limit)")
+        print()
+
     # Plotting: we use a log scale on the x-axis to better display the
-    # variation across several decades of EJ/EC.  The y-axis shows the
+    # variation across the wide range of EJ/EC values.  The y-axis shows the
     # anharmonicity in the same units as EC.  Negative anharmonicity is
     # expected for transmons and indicates that higher transition frequencies
     # decrease with increasing energy level.
-    fig, ax = plt.subplots()
-    ax.plot(ratios, anharmonicities, marker="o", linestyle="-")
-    ax.set_xscale("log")
-    ax.set_xlabel("EJ/EC")
-    ax.set_ylabel("Anharmonicity (dimensionless)")
-    ax.set_title("Transmon anharmonicity vs EJ/EC ratio")
-    ax.grid(True, which="both", ls="--", alpha=0.5)
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.plot(ratios, anharmonicities, marker="o", linestyle="-", label="α (numerical)")
 
+    # Add a horizontal reference line at -EC to show the asymptotic limit
+    ax.axhline(y=-EC, color="gray", linestyle="--", linewidth=1.5, alpha=0.7, label=f"α → -EC = {-EC}")
+
+    ax.set_xscale("log")
+    ax.set_xlabel("$E_J/E_C$", fontsize=12)
+    ax.set_ylabel("Anharmonicity (dimensionless)", fontsize=12)
+    ax.set_title("Transmon anharmonicity vs $E_J/E_C$ ratio", fontsize=14)
+    ax.grid(True, which="both", ls="--", alpha=0.5)
+    ax.legend(loc="best")
+
+    plt.tight_layout()
+    plt.savefig("transmon.png", dpi=150, bbox_inches="tight")
     plt.show()
 
 

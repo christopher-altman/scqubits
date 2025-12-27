@@ -76,16 +76,17 @@ This example sweeps the *ratio* $E_J/E_C$ at fixed $E_C$, so you can watch that 
 ## What the script does
 
 - Fixes $E_C = 1$ (dimensionless baseline)
-- Sweeps $E_J = (E_J/E_C)\,E_C$ over a chosen range
+- Sweeps $E_J = (E_J/E_C)\,E_C$ logarithmically over a chosen range
 - Constructs a `scqubits.Transmon` at each ratio
 - Calls `tmon.anharmonicity()` to compute $\alpha$
 - Plots $\alpha$ vs $E_J/E_C$ on a log $x$-axis
+- Overlays a horizontal reference line at $\alpha = -E_C$ to show the asymptotic limit
 
-**Why the log axis matters:** device-relevant ratios span a wide range (e.g., ~20–100 in many designs). A log scale makes the “rapid early change → slow asymptote” structure readable.
+**Why the log axis matters:** device-relevant ratios span a wide range (e.g., ~20–100 in many designs). A log scale makes the "rapid early change → slow asymptote" structure readable.
 
-**Key point:** The curve should be **negative** (transmon levels get closer together with increasing excitation number). As $E_J/E_C$ becomes large, it should **approach** $\alpha\approx -E_C$, and the **relative** anharmonicity $|\alpha|/\omega_{01}$ shrinks as you crank up $E_J/E_C$.
+**Key point:** The curve should be **negative** (transmon levels get closer together with increasing excitation number). As $E_J/E_C$ becomes large, $\alpha$ **approaches** $-E_C$ from below, and the **relative** anharmonicity $|\alpha|/\omega_{01}$ shrinks as you crank up $E_J/E_C$.
 
-![Transmon anharmonicity vs EJ/EC sweep](transmon.png)
+![Transmon anharmonicity vs EJ/EC sweep](../assets/transmon.png)
 
 ---
 
@@ -95,7 +96,7 @@ In scqubits, energies are expressed in user-selected **frequency units** (defaul
 
 Here we set $E_C=1$ to emphasize scaling.
 
-To make the plot “device-realistic,” try:
+To make the plot "device-realistic," try:
 - $E_C \sim 0.2$–$0.4$ GHz
 - $E_J/E_C \sim 20$–$100$
 
@@ -134,40 +135,47 @@ pip install -e .  # or: pip install scqubits
 python examples/anharmonicity_vs_ratio.py
 ```
 
+To enable debug output showing convergence at the highest ratio:
+
+```bash
+python examples/anharmonicity_vs_ratio.py --debug
+```
+
 ## What to look for
 
 - **Sign:** $\alpha < 0$ for a transmon
-- **Asymptote:** for large $E_J/E_C$, $\alpha \to -E_C$
+- **Asymptote:** for large $E_J/E_C$, $\alpha \to -E_C$ (approaches from below)
+- **Reference line:** the plot includes a dashed horizontal line at $-E_C$ for visual confirmation
 - **Interpretation:** higher $E_J/E_C$ → better charge-noise immunity, but weaker level discrimination (smaller $|\alpha|/\omega_{01}$)
 
 ---
 
 ## Suggested next steps / expansions (high value, low scope)
 
-1) **Analytic vs numeric overlay**  
-Plot both numeric $\alpha$ and the asymptote $\alpha_{\text{approx}}=-E_C$, and optionally also plot $\omega_{01}$ with
+1) **Analytic vs numeric overlay**
+The current script already overlays the asymptotic limit $\alpha_{\text{approx}}=-E_C$. You can extend this by also plotting $\omega_{01}$ with
 $\omega_{01}^{\text{approx}}=\sqrt{8E_JE_C}-E_C$.
 
-2) **Dimensionless “oracle view”**  
+2) **Dimensionless "oracle view"**
 Plot $\alpha/E_C$ vs $E_J/E_C$. In the deep transmon limit this should approach **$-1$** cleanly.
 
-3) **Charge dispersion map**  
+3) **Charge dispersion map**
 For a few fixed ratios, sweep $n_g\in[0,0.5]$ and plot the spread in $\omega_{01}(n_g)$. This visualizes *why* transmons
 prefer large $E_J/E_C$.
 
-4) **Convergence harness**  
+4) **Convergence harness**
 Repeat the sweep across `ncut` values, report max deviation, and optionally save CSV/JSON artifacts for reproducibility.
 
-5) **Engineering dial**  
-Plot $|\alpha|/\omega_{01}$ vs $E_J/E_C$ as a compact “leakage pressure” proxy.
+5) **Engineering dial**
+Plot $|\alpha|/\omega_{01}$ vs $E_J/E_C$ as a compact "leakage pressure" proxy.
 
 ---
 
 ## References
 
-- Peter Groszkowski and Jens Koch, *scqubits: a Python package for superconducting qubits*, **Quantum** 5, 583 (2021). DOI: 10.22331/q-2021-11-17-583.  
+- Peter Groszkowski and Jens Koch, *scqubits: a Python package for superconducting qubits*, **Quantum** 5, 583 (2021). DOI: 10.22331/q-2021-11-17-583.
   https://quantum-journal.org/papers/q-2021-11-17-583/
-- Sai Pavan Chitta, Tianpu Zhao, Ziwen Huang, Ian Mondragon-Shem, and Jens Koch, *Computer-aided quantization and numerical analysis of superconducting circuits*, **New J. Phys.** 24, 103020 (2022). DOI: 10.1088/1367-2630/ac94f2.  
+- Sai Pavan Chitta, Tianpu Zhao, Ziwen Huang, Ian Mondragon-Shem, and Jens Koch, *Computer-aided quantization and numerical analysis of superconducting circuits*, **New J. Phys.** 24, 103020 (2022). DOI: 10.1088/1367-2630/ac94f2.
 
 ---
 
