@@ -1517,6 +1517,131 @@ class ParameterSweep(  # type:ignore
 
         return lamb_data, chi_data, kerr_data
 
+    def validate_adiabatic(
+        self,
+        state_indices: Tuple[int, int],
+        threshold: float = 0.01,
+        return_rates: bool = True,
+        ramp_time: Optional[float] = None,
+        use_tracked_states: bool = True
+    ):
+        """
+        Check if sweep satisfies adiabatic theorem for given state pair.
+
+        Validates whether the parameter sweep trajectory satisfies the
+        Landau-Zener adiabatic criterion. Useful for checking quantum
+        annealing protocols and adiabatic state preparation.
+
+        Parameters
+        ----------
+        state_indices:
+            Tuple of (initial_state, final_state) indices to track
+        threshold:
+            Minimum acceptable Landau-Zener parameter γ (default 0.01 for ~1% error)
+        return_rates:
+            If True, compute maximum safe ramp rate
+        ramp_time:
+            Total time for ramp in natural units (ℏ=1). If None, assumes
+            unit spacing between sweep points.
+        use_tracked_states:
+            If True, tracks states through avoided crossings before validation
+
+        Returns
+        -------
+        AdiabaticReport
+            Report containing validation results, violation points, gap
+            trajectory, and suggested ramp time
+
+        See Also
+        --------
+        scqubits.utils.adiabatic_validator.validate_adiabatic_ramp
+            Full documentation of validation algorithm and return structure
+        reorder_by_state_evolution
+            For reordering states to follow physical evolution
+
+        Examples
+        --------
+        >>> import scqubits as scq
+        >>> qubit = scq.Transmon(EJ=15.0, EC=0.3, ng=0.0, ncut=30)
+        >>> sweep = qubit.create_sweep('ng', np.linspace(-0.5, 0.5, 100))
+        >>> report = sweep.validate_adiabatic(state_indices=(0, 1))
+        >>> if not report.is_adiabatic:
+        ...     print(f"Need {report.suggested_ramp_time:.2f} time units")
+        """
+        from scqubits.utils.adiabatic_validator import validate_adiabatic_ramp
+        return validate_adiabatic_ramp(
+            self,
+            state_indices,
+            threshold=threshold,
+            return_rates=return_rates,
+            ramp_time=ramp_time,
+            use_tracked_states=use_tracked_states
+        )
+
+    def reorder_by_state_evolution(
+        self,
+        initial_labels: Optional[List[int]] = None,
+        overlap_threshold: float = 0.5,
+        use_eigenvectors: bool = True
+    ):
+        """
+        Reorder eigenvalues to follow adiabatic state evolution.
+
+        Tracks dressed states through parameter sweep to maintain physical
+        identity across avoided crossings. Reorders eigenvalues and eigenvectors
+        so that each "column" follows a single physical state.
+
+        Parameters
+        ----------
+        initial_labels:
+            List of state indices at first sweep point in desired physical order.
+            If None, uses natural ordering [0, 1, 2, ...].
+        overlap_threshold:
+            Minimum overlap |⟨ψ_i|ψ_j⟩|² to consider states connected (default 0.5)
+        use_eigenvectors:
+            If True, uses eigenvector overlaps. If False, uses energy proximity.
+
+        Returns
+        -------
+        TrackedStates
+            Object containing reordered eigenvalues, eigenvectors, state labels,
+            and discontinuity information
+
+        See Also
+        --------
+        scqubits.utils.state_tracking.track_dressed_states
+            Full documentation of tracking algorithm and return structure
+        validate_adiabatic
+            For checking adiabatic criterion along trajectory
+
+        Notes
+        -----
+        For best results, ensure sweep was run with eigenvectors stored.
+        Falls back to energy-based tracking if eigenvectors unavailable.
+
+        Examples
+        --------
+        >>> import scqubits as scq
+        >>> qubit = scq.Transmon(EJ=15.0, EC=0.3, ng=0.0, ncut=30)
+        >>> sweep = qubit.create_sweep('ng', np.linspace(-0.5, 0.5, 100))
+        >>> tracked = sweep.reorder_by_state_evolution(initial_labels=[0, 1])
+        >>> # Now tracked.eigenvalues maintains physical state identity
+        >>> import matplotlib.pyplot as plt
+        >>> plt.plot(tracked.eigenvalues[:, 0], label='Physical ground state')
+        >>> plt.plot(tracked.eigenvalues[:, 1], label='Physical 1st excited')
+        """
+        from scqubits.utils.state_tracking import track_dressed_states
+        if initial_labels is None:
+            # Default to tracking all states in natural order
+            n_states = self._evals_count
+            initial_labels = list(range(n_states))
+        return track_dressed_states(
+            self,
+            initial_labels,
+            overlap_threshold=overlap_threshold,
+            use_eigenvectors=use_eigenvectors
+        )
+
 
 class StoredSweep(
     ParameterSweepBase, dispatch.DispatchClient, serializers.Serializable
