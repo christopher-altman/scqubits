@@ -70,7 +70,11 @@ There are two related packages on github:
 documentation source code: https://github.com/scqubits/scqubits-doc   
 example notebooks: https://github.com/scqubits/scqubits-examples  
 
-Additional example script in this fork: `examples/anharmonicity_vs_ratio.py` (transmon anharmonicity vs EJ/EC sweep).
+Additional examples and utilities in this fork:
+- `examples/anharmonicity_vs_ratio.py` — transmon anharmonicity vs EJ/EC sweep
+- `examples/adiabatic_analysis.ipynb` — adiabatic state tracking and validation demo
+- `scqubits/utils/state_tracking.py` — maintain physical state identity through avoided crossings
+- `scqubits/utils/adiabatic_validator.py` — validate parameter sweeps against Landau-Zener criterion
 
 
 Contribute
